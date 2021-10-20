@@ -1,6 +1,6 @@
 # Notification Module
 ## Description
-## Running Instructure
+## Running Instruction
    - To running unit test of project
    mvn clean test
    - To packaging project into jar file.
@@ -11,7 +11,9 @@
    docker build . -t notification:latest
    - running container in local environment.
    docker run -p 8081:8081 notification:latest
-   
+
+## Swagger
+    https://{endpoint}/services/api/swagger/api-docs
 ## Entity
 
 ## Repository

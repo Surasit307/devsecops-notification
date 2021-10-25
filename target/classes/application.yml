@@ -1,0 +1,40 @@
+logging.file: ./log/email/console.log
+logging.file.max-history: 10
+logging.file.max-size: 100MB
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %logger{36} %-5level - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} %logger{40} [%thread] %-5level %logger{36} - %msg%n"
+  level:
+    .: INFO
+    org.springframework: ERROR
+    com.ttb.fleet: DEBUG
+    com.netflix: OFF
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path= /swagger-ui.html
+spring:
+  profiles:
+    active: default
+  main:
+    banner-mode: CONSOLE
+  application:
+    name: fleet-notification
+    description: ${applicaiton.name} module is a Spring Boot application
+security:
+  basic:
+    enabled: false
+management:
+  security:
+    enabled: false
+server:
+  port: 8081
+eureka:
+  client:
+    service-url:
+      default-zone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    preferIpAddress: true
+thread-pool: 20

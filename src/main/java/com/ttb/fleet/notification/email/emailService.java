@@ -1,4 +1,4 @@
 package com.ttb.fleet.notification.email;
 
-public interface service {
+public interface emailService {
 }

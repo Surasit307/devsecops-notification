@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SmsIn.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">notification</a> &gt; <a href="index.source.html" class="el_package">com.ttb.fleet.notification.sms.dto</a> &gt; <span class="el_source">SmsIn.java</span></div><h1>SmsIn.java</h1><pre class="source lang-java linenums">package com.ttb.fleet.notification.sms.dto;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.io.Serializable;
+import java.util.Map;
+
+@JsonIgnoreProperties
+<span class="nc" id="L10">public class SmsIn implements Serializable {</span>
+    private static final long serialVersionUID = 1L;
+    @JsonProperty(&quot;mobile&quot;)
+    private String[] mobile;
+    @JsonProperty(&quot;message_id&quot;)
+    private String msgid;
+    @JsonProperty(&quot;object&quot;)
+    private Map&lt;String, String&gt; replace;
+    @JsonProperty(&quot;language&quot;)
+    private String language;
+
+    public String[] getMobile() {
+<span class="nc" id="L22">        return mobile;</span>
+    }
+
+    public void setMobile(String[] mobile) {
+<span class="nc" id="L26">        this.mobile = mobile;</span>
+<span class="nc" id="L27">    }</span>
+
+    public String getMsgid() {
+<span class="nc" id="L30">        return msgid;</span>
+    }
+
+    public void setMsgid(String msgid) {
+<span class="nc" id="L34">        this.msgid = msgid;</span>
+<span class="nc" id="L35">    }</span>
+
+    public Map&lt;String, String&gt; getReplace() {
+<span class="nc" id="L38">        return replace;</span>
+    }
+
+    public void setReplace(Map&lt;String, String&gt; replace) {
+<span class="nc" id="L42">        this.replace = replace;</span>
+<span class="nc" id="L43">    }</span>
+
+    public String getLanguage() {
+<span class="nc" id="L46">        return language;</span>
+    }
+
+    public void setLanguage(String language) {
+<span class="nc" id="L50">        this.language = language;</span>
+<span class="nc" id="L51">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

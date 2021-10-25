@@ -1,1 +1,5 @@
+com/ttb/fleet/notification/email/controller/emailControllerTest.class
+com/ttb/fleet/notification/email/service/Impl/emailServiceImplTest.class
+com/ttb/fleet/notification/sms/controller/smsControllerTest.class
+com/ttb/fleet/notification/sms/service/Impl/smsServiceImplTest.class
 com/ttb/fleet/notification/NotificationApplicationTests.class

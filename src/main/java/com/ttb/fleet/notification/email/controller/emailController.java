@@ -27,7 +27,7 @@ public class emailController {
     private emailService emailservice;
 
     @PostMapping("/v1/email")
-    public ResponseEntity<ResponseOut> SendEmail(@RequestHeader Map<String, String> headers,@RequestBody EmailIn body) {
+    public ResponseEntity<ResponseOut> SendEmail(@RequestHeader Map<String, String> headers, @RequestBody(required = false) EmailIn body) {
         StopWatch watch = new StopWatch();
         ObjectMapper mapper = new ObjectMapper();
         logger.info(String.format("SendEmail Controller Request Header: %s", headers.keySet().stream()
@@ -36,24 +36,44 @@ public class emailController {
 //        logger.info(String.format("generateOTP Controller Request Body: %s", body.keySet().stream()
 //                .map(key -> key + ":" + body.get(key))
 //                .collect(Collectors.joining(", ", "{", "}"))));
+        ApiStatusOut apistatus = new ApiStatusOut();
+        ResponseOut response = new ResponseOut();
         try {
-            // TODO: Implement Input Validation
+            if(body.getTo() == null){
+                apistatus.setCode("E4001");
+                apistatus.setBusinessMessage("Require field missing");
+                apistatus.setDeveloperMessage("parameter to is missing");
+                response.setApiStatus(apistatus);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            if(body.getMessageId() == null){
+                apistatus.setCode("E4002");
+                apistatus.setBusinessMessage("Require field missing");
+                apistatus.setDeveloperMessage("parameter message_id is missing");
+                response.setApiStatus(apistatus);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            if(body.getLanguage() == null){
+                apistatus.setCode("E4003");
+                apistatus.setBusinessMessage("Require field missing");
+                apistatus.setDeveloperMessage("parameter language is missing");
+                response.setApiStatus(apistatus);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+
             // TODO: Implement Business Logic
-            ApiStatusOut apistatus = new ApiStatusOut();
             apistatus.setCode("S0000");
             apistatus.setBusinessMessage("Email Sending Successful");
             apistatus.setDeveloperMessage("Success");
-            ResponseOut response = new ResponseOut();
             response.setApiStatus(apistatus);
+            response.setData((Map<String, Object>) emailservice.send(body.getTo(), body.getMessageId(), body.getReplaceString(), body.getLanguage()));
             logger.info(String.format("SendEmail Controller Response: %s", mapper.writeValueAsString(response)));
-            logger.info(String.format("SendEmail Controller elapse time %.4f seconds",watch.elapsedTime()));
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            logger.info(String.format("SendEmail Controller elapse time %.4f seconds", watch.elapsedTime()));
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (JsonProcessingException e) {
-            ApiStatusOut apistatus = new ApiStatusOut();
             apistatus.setCode("E5000");
             apistatus.setBusinessMessage("Service Not Available");
             apistatus.setDeveloperMessage(e.getMessage());
-            ResponseOut response = new ResponseOut();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }

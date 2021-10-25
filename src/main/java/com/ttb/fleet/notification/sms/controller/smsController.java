@@ -26,7 +26,7 @@ public class smsController {
     private smsService smsservice;
 
     @PostMapping("/v1/sms")
-    public ResponseEntity<ResponseOut> SendSms(@RequestHeader Map<String, String> headers, @RequestBody SmsIn body) {
+    public ResponseEntity<ResponseOut> SendSms(@RequestHeader Map<String, String> headers, @RequestBody(required = false) SmsIn body) {
         StopWatch watch = new StopWatch();
         ObjectMapper mapper = new ObjectMapper();
         logger.info(String.format("SendEmail Controller Request Header: %s", headers.keySet().stream()
@@ -42,6 +42,7 @@ public class smsController {
             apistatus.setDeveloperMessage("Success");
             ResponseOut response = new ResponseOut();
             response.setApiStatus(apistatus);
+            response.setData((Map<String, Object>) smsservice.send(body.getMobile(),body.getMsgid(),body.getReplace(),body.getLanguage()));
             logger.info(String.format("SendEmail Controller Response: %s", mapper.writeValueAsString(response)));
             logger.info(String.format("SendEmail Controller elapse time %.4f seconds", watch.elapsedTime()));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -51,6 +52,7 @@ public class smsController {
             apistatus.setBusinessMessage("Service Not Available");
             apistatus.setDeveloperMessage(e.getMessage());
             ResponseOut response = new ResponseOut();
+            response.setApiStatus(apistatus);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
+import java.util.Map;
 
 @JsonIgnoreProperties
 public class EmailIn  implements Serializable {
@@ -11,10 +12,12 @@ public class EmailIn  implements Serializable {
 
     @JsonProperty("to")
     private String[] to;
-    @JsonProperty("subject")
-    private String subject;
-    @JsonProperty("content")
-    private String content;
+    @JsonProperty("message_id")
+    private String messageId;
+    @JsonProperty("langiage")
+    private String language;
+    @JsonProperty("object")
+    private Map<String,String> replaceString;
 
     public String[] getTo() {
         return to;
@@ -24,19 +27,26 @@ public class EmailIn  implements Serializable {
         this.to = to;
     }
 
-    public String getSubject() {
-        return subject;
+    public String getMessageId() {
+        return messageId;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 
-    public String getContent() {
-        return content;
+    public String getLanguage() {
+        return language;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+    public Map<String, String> getReplaceString() {
+        return replaceString;
+    }
+
+    public void setReplaceString(Map<String, String> replaceString) {
+        this.replaceString = replaceString;
     }
 }

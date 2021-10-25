@@ -1,8 +1,9 @@
-package com.ttb.fleet.notification.email;
+package com.ttb.fleet.notification.email.controller;
 
 import com.ttb.fleet.notification.common.dto.ApiStatusOut;
 import com.ttb.fleet.notification.common.dto.ResponseOut;
 import com.ttb.fleet.notification.email.dto.EmailIn;
+import com.ttb.fleet.notification.email.service.emailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

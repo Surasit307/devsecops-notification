@@ -30,7 +30,7 @@ management:
   security:
     enabled: false
 server:
-  port: 8081
+  port: ${SERVICE_PORT:8081}
 eureka:
   client:
     service-url:

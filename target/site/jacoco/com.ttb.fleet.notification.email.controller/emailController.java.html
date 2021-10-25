@@ -39,21 +39,21 @@ import java.util.stream.Collectors;
 <span class="fc" id="L39">        ApiStatusOut apistatus = new ApiStatusOut();</span>
 <span class="fc" id="L40">        ResponseOut response = new ResponseOut();</span>
         try {
-<span class="fc bfc" id="L42" title="All 2 branches covered.">            if(body.getTo() == null){</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">            if (body.getTo() == null) {</span>
 <span class="fc" id="L43">                apistatus.setCode(&quot;E4001&quot;);</span>
 <span class="fc" id="L44">                apistatus.setBusinessMessage(&quot;Require field missing&quot;);</span>
 <span class="fc" id="L45">                apistatus.setDeveloperMessage(&quot;parameter to is missing&quot;);</span>
 <span class="fc" id="L46">                response.setApiStatus(apistatus);</span>
 <span class="fc" id="L47">                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);</span>
             }
-<span class="fc bfc" id="L49" title="All 2 branches covered.">            if(body.getMessageId() == null){</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">            if (body.getMessageId() == null) {</span>
 <span class="fc" id="L50">                apistatus.setCode(&quot;E4002&quot;);</span>
 <span class="fc" id="L51">                apistatus.setBusinessMessage(&quot;Require field missing&quot;);</span>
 <span class="fc" id="L52">                apistatus.setDeveloperMessage(&quot;parameter message_id is missing&quot;);</span>
 <span class="fc" id="L53">                response.setApiStatus(apistatus);</span>
 <span class="fc" id="L54">                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);</span>
             }
-<span class="fc bfc" id="L56" title="All 2 branches covered.">            if(body.getLanguage() == null){</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">            if (body.getLanguage() == null) {</span>
 <span class="fc" id="L57">                apistatus.setCode(&quot;E4003&quot;);</span>
 <span class="fc" id="L58">                apistatus.setBusinessMessage(&quot;Require field missing&quot;);</span>
 <span class="fc" id="L59">                apistatus.setDeveloperMessage(&quot;parameter language is missing&quot;);</span>
@@ -66,7 +66,7 @@ import java.util.stream.Collectors;
 <span class="fc" id="L66">            apistatus.setBusinessMessage(&quot;Email Sending Successful&quot;);</span>
 <span class="fc" id="L67">            apistatus.setDeveloperMessage(&quot;Success&quot;);</span>
 <span class="fc" id="L68">            response.setApiStatus(apistatus);</span>
-<span class="fc" id="L69">            response.setData((Map&lt;String, Object&gt;) emailservice.send(body.getTo(), body.getMessageId(), body.getReplaceString(), body.getLanguage()));</span>
+<span class="fc" id="L69">            response.setData((Map&lt;String, Object&gt;) emailservice.send(headers.get(&quot;x-requested-id&quot;), body.getTo(), body.getMessageId(), body.getReplaceString(), body.getLanguage()));</span>
 <span class="fc" id="L70">            logger.info(String.format(&quot;SendEmail Controller Response: %s&quot;, mapper.writeValueAsString(response)));</span>
 <span class="fc" id="L71">            logger.info(String.format(&quot;SendEmail Controller elapse time %.4f seconds&quot;, watch.elapsedTime()));</span>
 <span class="fc" id="L72">            return ResponseEntity.status(HttpStatus.OK).body(response);</span>

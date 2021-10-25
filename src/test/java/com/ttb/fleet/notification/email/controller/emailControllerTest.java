@@ -5,7 +5,6 @@ import com.ttb.fleet.notification.email.dto.EmailIn;
 import com.ttb.fleet.notification.email.dto.EmailOut;
 import com.ttb.fleet.notification.email.service.Impl.emailServiceImpl;
 import org.assertj.core.api.Assertions;
-import org.bouncycastle.asn1.cms.TimeStampAndCRL;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,7 +40,7 @@ class emailControllerTest {
         emailout.setRequestedId("46e062f8-5c43-43b0-9734-019112ae1a62");
         emailout.setStatus("Success");
         emailout.setRequestedTimeStamp(simpledateformat.format(timestamp));
-        lenient().when(emailservice.send(new String[]{Mockito.anyString()},Mockito.anyString(),Mockito.anyMap(),Mockito.anyString())).thenReturn(emailout);
+        lenient().when(emailservice.send(Mockito.anyString(), new String[]{Mockito.anyString()}, Mockito.anyString(), Mockito.anyMap(), Mockito.anyString())).thenReturn(emailout);
     }
 
     @Test
@@ -62,14 +61,14 @@ class emailControllerTest {
         emailin.setLanguage("th");
         emailin.setTo(new String[]{"sender@example.com", "test@example.com"});
 
-        ResponseEntity<ResponseOut> response = emailcontroller.SendEmail(header,emailin);
+        ResponseEntity<ResponseOut> response = emailcontroller.SendEmail(header, emailin);
         Assertions.assertThat(response.getBody().getApiStatus().getCode()).isEqualTo("S0000");
 
     }
 
     @Test
     @DisplayName("Should be return E4001 when missing to parameter")
-    void sendemailE4001(){
+    void sendemailE4001() {
         Map<String, String> header = new HashMap<>();
         header.put("authorization", "UnVqamk=");
         header.put("x-authorizer", "implementhmac256");
@@ -84,13 +83,13 @@ class emailControllerTest {
         emailin.setMessageId("MSGE0001");
         emailin.setLanguage("th");
 
-        ResponseEntity<ResponseOut> response = emailcontroller.SendEmail(header,emailin);
+        ResponseEntity<ResponseOut> response = emailcontroller.SendEmail(header, emailin);
         Assertions.assertThat(response.getBody().getApiStatus().getCode()).isEqualTo("E4001");
     }
 
     @Test
     @DisplayName("Should be return E4002 when missing to parameter")
-    void sendemailE4002(){
+    void sendemailE4002() {
         Map<String, String> header = new HashMap<>();
         header.put("authorization", "UnVqamk=");
         header.put("x-authorizer", "implementhmac256");
@@ -105,13 +104,13 @@ class emailControllerTest {
         emailin.setTo(new String[]{"sender@example.com", "test@example.com"});
         emailin.setLanguage("th");
 
-        ResponseEntity<ResponseOut> response = emailcontroller.SendEmail(header,emailin);
+        ResponseEntity<ResponseOut> response = emailcontroller.SendEmail(header, emailin);
         Assertions.assertThat(response.getBody().getApiStatus().getCode()).isEqualTo("E4002");
     }
 
     @Test
     @DisplayName("Should be return E4003 when missing language parameter")
-    void sendemailE4003(){
+    void sendemailE4003() {
         Map<String, String> header = new HashMap<>();
         header.put("authorization", "UnVqamk=");
         header.put("x-authorizer", "implementhmac256");
@@ -126,7 +125,7 @@ class emailControllerTest {
         emailin.setTo(new String[]{"sender@example.com", "test@example.com"});
         emailin.setMessageId("MSGE0001");
 
-        ResponseEntity<ResponseOut> response = emailcontroller.SendEmail(header,emailin);
+        ResponseEntity<ResponseOut> response = emailcontroller.SendEmail(header, emailin);
         Assertions.assertThat(response.getBody().getApiStatus().getCode()).isEqualTo("E4003");
     }
 }

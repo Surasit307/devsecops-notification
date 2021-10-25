@@ -42,7 +42,7 @@ public class smsController {
             apistatus.setDeveloperMessage("Success");
             ResponseOut response = new ResponseOut();
             response.setApiStatus(apistatus);
-            response.setData((Map<String, Object>) smsservice.send(body.getMobile(),body.getMsgid(),body.getReplace(),body.getLanguage()));
+            response.setData((Map<String, Object>) smsservice.send(headers.get("x-requested-id"), body.getMobile(), body.getMsgid(), body.getReplace(), body.getLanguage()));
             logger.info(String.format("SendEmail Controller Response: %s", mapper.writeValueAsString(response)));
             logger.info(String.format("SendEmail Controller elapse time %.4f seconds", watch.elapsedTime()));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);

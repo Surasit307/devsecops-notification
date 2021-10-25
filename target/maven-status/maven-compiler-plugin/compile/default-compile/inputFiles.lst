@@ -4,6 +4,7 @@
 /Users/rujji/Workspace/java/microservice/notification/src/main/java/com/ttb/fleet/notification/email/controller/emailController.java
 /Users/rujji/Workspace/java/microservice/notification/src/main/java/com/ttb/fleet/notification/NotificationApplication.java
 /Users/rujji/Workspace/java/microservice/notification/src/main/java/com/ttb/fleet/notification/email/service/emailService.java
+/Users/rujji/Workspace/java/microservice/notification/src/main/java/com/ttb/fleet/notification/repository/messageRepository.java
 /Users/rujji/Workspace/java/microservice/notification/src/main/java/com/ttb/fleet/notification/common/utils/StopWatch.java
 /Users/rujji/Workspace/java/microservice/notification/src/main/java/com/ttb/fleet/notification/common/dto/HeaderIn.java
 /Users/rujji/Workspace/java/microservice/notification/src/main/java/com/ttb/fleet/notification/sms/controller/smsController.java
@@ -11,5 +12,6 @@
 /Users/rujji/Workspace/java/microservice/notification/src/main/java/com/ttb/fleet/notification/common/dto/ResponseOut.java
 /Users/rujji/Workspace/java/microservice/notification/src/main/java/com/ttb/fleet/notification/common/dto/ApiStatusOut.java
 /Users/rujji/Workspace/java/microservice/notification/src/main/java/com/ttb/fleet/notification/sms/dto/SmsIn.java
+/Users/rujji/Workspace/java/microservice/notification/src/main/java/com/ttb/fleet/notification/entity/Message.java
 /Users/rujji/Workspace/java/microservice/notification/src/main/java/com/ttb/fleet/notification/sms/service/Impl/smsServiceImpl.java
 /Users/rujji/Workspace/java/microservice/notification/src/main/java/com/ttb/fleet/notification/email/service/Impl/emailServiceImpl.java

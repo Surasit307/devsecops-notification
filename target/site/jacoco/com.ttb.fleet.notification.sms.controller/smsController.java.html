@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 <span class="nc" id="L42">            apistatus.setDeveloperMessage(&quot;Success&quot;);</span>
 <span class="nc" id="L43">            ResponseOut response = new ResponseOut();</span>
 <span class="nc" id="L44">            response.setApiStatus(apistatus);</span>
-<span class="nc" id="L45">            response.setData((Map&lt;String, Object&gt;) smsservice.send(body.getMobile(),body.getMsgid(),body.getReplace(),body.getLanguage()));</span>
+<span class="nc" id="L45">            response.setData((Map&lt;String, Object&gt;) smsservice.send(headers.get(&quot;x-requested-id&quot;), body.getMobile(), body.getMsgid(), body.getReplace(), body.getLanguage()));</span>
 <span class="nc" id="L46">            logger.info(String.format(&quot;SendEmail Controller Response: %s&quot;, mapper.writeValueAsString(response)));</span>
 <span class="nc" id="L47">            logger.info(String.format(&quot;SendEmail Controller elapse time %.4f seconds&quot;, watch.elapsedTime()));</span>
 <span class="nc" id="L48">            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);</span>

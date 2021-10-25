@@ -39,21 +39,21 @@ public class emailController {
         ApiStatusOut apistatus = new ApiStatusOut();
         ResponseOut response = new ResponseOut();
         try {
-            if(body.getTo() == null){
+            if (body.getTo() == null) {
                 apistatus.setCode("E4001");
                 apistatus.setBusinessMessage("Require field missing");
                 apistatus.setDeveloperMessage("parameter to is missing");
                 response.setApiStatus(apistatus);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
-            if(body.getMessageId() == null){
+            if (body.getMessageId() == null) {
                 apistatus.setCode("E4002");
                 apistatus.setBusinessMessage("Require field missing");
                 apistatus.setDeveloperMessage("parameter message_id is missing");
                 response.setApiStatus(apistatus);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
-            if(body.getLanguage() == null){
+            if (body.getLanguage() == null) {
                 apistatus.setCode("E4003");
                 apistatus.setBusinessMessage("Require field missing");
                 apistatus.setDeveloperMessage("parameter language is missing");
@@ -66,7 +66,7 @@ public class emailController {
             apistatus.setBusinessMessage("Email Sending Successful");
             apistatus.setDeveloperMessage("Success");
             response.setApiStatus(apistatus);
-            response.setData((Map<String, Object>) emailservice.send(body.getTo(), body.getMessageId(), body.getReplaceString(), body.getLanguage()));
+            response.setData((Map<String, Object>) emailservice.send(headers.get("x-requested-id"), body.getTo(), body.getMessageId(), body.getReplaceString(), body.getLanguage()));
             logger.info(String.format("SendEmail Controller Response: %s", mapper.writeValueAsString(response)));
             logger.info(String.format("SendEmail Controller elapse time %.4f seconds", watch.elapsedTime()));
             return ResponseEntity.status(HttpStatus.OK).body(response);

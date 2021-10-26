@@ -44,6 +44,32 @@ security:
 management:
   security:
     enabled: false
+  endpoints:
+    gateway:
+      enable: true
+    web:
+      base-path: /management
+      path-mapping:
+        health: /healthcheck
+      exposure:
+        include: "*"
+      discovery:
+        enabled: false
+    health:
+      ldap:
+        enabled: false
+      mail:
+        enabled: false
+      group:
+        custom:
+          show-details: "when-authorized"
+          roles: "admin"
+          status:
+            order: "fatal,up"
+            http-mapping:
+              fatal: 500
+              out-of-service: 500
+
 server:
   port: ${SERVICE_PORT:8081}
 eureka:

@@ -4,7 +4,7 @@ import com.ttb.fleet.notification.email.dto.EmailOut;
 
 import java.util.Map;
 
-public interface emailService {
+public interface EmailService {
 
     public EmailOut send(String requestId, String[] to, String messageId, Map<String, String> replace, String language);
 

@@ -6,7 +6,7 @@ import com.ttb.fleet.notification.common.dto.ApiStatusOut;
 import com.ttb.fleet.notification.common.dto.ResponseOut;
 import com.ttb.fleet.notification.common.utils.StopWatch;
 import com.ttb.fleet.notification.sms.dto.SmsIn;
-import com.ttb.fleet.notification.sms.service.smsService;
+import com.ttb.fleet.notification.sms.service.SmsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +19,11 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
-public class smsController {
-    private final Logger logger = LoggerFactory.getLogger(smsController.class);
+public class SmsController {
+    private final Logger logger = LoggerFactory.getLogger(SmsController.class);
 
     @Autowired
-    private smsService smsservice;
+    private SmsService smsservice;
 
     @PostMapping("/v1/sms")
     public ResponseEntity<ResponseOut> SendSms(@RequestHeader Map<String, String> headers, @RequestBody(required = false) SmsIn body) {

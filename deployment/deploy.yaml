@@ -1,0 +1,152 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: '${NAME}-deploy'
+  annotations:
+    tags: 'dev,fleet'
+message: 'The following service(s) have been created in your project: ${NAME}'
+labels:
+  template: devfleet
+  app: devfleet
+objects:
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: '${NAME}'
+      namespace: '${NAMESPACE}'
+      annotations:
+        description: Exposes and load balances the application pods
+    spec:
+      ports:
+        - name: http
+          port: 80
+          targetPort: 8081
+      selector:
+        deploymentconfig: '${NAME}'
+  - kind: DeploymentConfig
+    apiVersion: apps.openshift.io/v1
+    metadata:
+      name: '${NAME}'
+      annotations:
+        description: Defines how to deploy the application server
+        template.alpha.openshift.io/wait-for-ready: 'true'
+      namespace: '${NAMESPACE}'
+    spec:
+      strategy:
+        type: Rolling
+        resources:
+          limits:
+            memory: '${MEMORY_LIMIT}'
+            cpu: '${CPU_LIMIT}'
+          requests:
+            memory: '${MEMORY_REQUEST}'
+            cpu: '${CPU_REQUEST}'
+      triggers:
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - '${NAME}'
+            from:
+              kind: ImageStreamTag
+              name: '${NAME}:latest'
+        - type: ConfigChange
+      replicas: 1
+      selector:
+        deploymentconfig: '${NAME}'
+      template:
+        metadata:
+          name: '${NAME}'
+          labels:
+            type: apps
+            deploymentconfig: '${NAME}'
+        spec:
+          containers:
+            - name: '${NAME}'
+              image: '${NAME}'
+              ports:
+                - name: http
+                  containerPort: 8081
+              readinessProbe:
+                timeoutSeconds: 60
+                initialDelaySeconds: 60
+                httpGet:
+                  scheme: HTTP
+                  path: /management/health
+                  port: 8081
+              livenessProbe:
+                timeoutSeconds: 60
+                initialDelaySeconds: 60
+                periodSeconds: 60
+                httpGet:
+                  scheme: HTTP
+                  path: /management/health
+                  port: 8081
+              resources:
+                limits:
+                  memory: '${MEMORY_LIMIT}'
+                  cpu: '${CPU_LIMIT}'
+                requests:
+                  memory: '${MEMORY_REQUEST}'
+                  cpu: '${CPU_REQUEST}'
+              env:
+                - name: TZ
+                  value: Asia/Bangkok
+              envFrom:
+                - configMapRef:
+                    name: fleet-config
+                - configMapRef:
+                    name: '${NAME}-config'
+                - secretRef:
+                    name: fleet-secret
+                - secretRef:
+                    name: ${NAME}-secret
+              volumeMounts:
+                - name: '${NAME}-config'
+                  mountPath: /deployments/config
+          volumes:
+            - name: '${NAME}-config'
+              configMap:
+                name: '${NAME}-config'
+parameters:
+  - name: NAME
+    displayName: Name
+    description: The name assigned to all of the eKYC objects defined in this template.
+    required: true
+    value: fleet-notification
+  - name: NAMESPACE
+    displayName: Namespace
+    description: The OpenShift Namespace where the ImageStream resides.
+    required: true
+    value: dev-fleet
+  - name: HEALTHCHECK_PATH
+    displayName: Healthcheck Path
+    description: API Get Path for Liveness and Readyness probe.
+    required: true
+    value: /
+  - name: MEMORY_LIMIT
+    displayName: Memory Limit
+    description: Maximum amount of memory the container can use.
+    required: true
+    value: 1Gi
+  - name: MEMORY_REQUEST
+    displayName: Memory Request
+    description: Starting amount of memory the container can use.
+    required: true
+    value: 256Mi
+  - name: CPU_LIMIT
+    displayName: CPU Limit
+    description: Maximum amount of cpu the container can use.
+    required: true
+    value: 500m
+  - name: CPU_REQUEST
+    displayName: CPU Request
+    description: Starting amount of cpu the container can use.
+    required: true
+    value: 256m
+  - name: APPLICATION_DOMAIN
+    displayName: Application Hostname
+    description: >-
+      The exposed hostname that will route to the Node.js service, if left blank
+      a value will be defaulted.
+    value: ''

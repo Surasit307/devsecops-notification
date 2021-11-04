@@ -1,0 +1,230 @@
+/*Deployment Name / Service Name / App Name*/
+def appName = 'fleet-notification'
+def nexusDockerURL = 'nexus.tmbbank.local:60005'
+def nexusBaseURL = 'nexus.tmbbank.local:8081'
+def nexusCredentialsId = '5880caf8-5fe8-4567-a99f-227560f75fc2'
+def ocp_project = 'dev-fleet'
+def git_url = 'https://bitbucket.tmbbank.local:7990/scm/asfed/fleet-notification.git'
+def appVersion = "1.0"
+def sonarqubeURL ='http://10.209.50.21:9000/'
+def sonar_credentail = 'newqube'
+def fileConfigmap = "configmap.properties"
+def fileSecret = "secret.properties"
+def fileapplication = "application.properties"
+def memory_limit = '1Gi'
+def memory_request = '256Mi'
+def cpu_limit = '512m'
+def cpu_request = '256m'
+def deployment_file = './deploy.yaml'
+
+node('STMDEVOPSLGAD1') {
+    try {
+  		currentBuild.result = "SUCCESS"
+
+      stage('Checkout The Code'){
+          echo '*************** Stage: Checkout source code **************'
+          checkout scm
+
+          dir ('./app')
+          {
+              git branch: '${branchName}', credentialsId: 'jenkins_autoForBitbucket' ,url:"${git_url}"
+          }
+      }
+
+      stage('Build'){
+          echo '*************** Stage: Build code **************'
+          dir ('./app')
+          {
+              sh """
+              sudo update-alternatives --set java /app/jdk-11.0.5/bin/java
+              mvn -Dmaven.test.skip package
+              """
+          }
+      }
+
+      stage('Sonarqube') {
+          echo '*************** Stage: Run SonarQube  **************'
+          dir ('./app')
+          {
+              withSonarQubeEnv('sonarqube_2') {
+              sh """
+              mvn clean verify sonar:sonar
+              """
+              } // submitted SonarQube taskId is automatically attached to the pipeline context
+          }
+       }
+
+      stage("Quality Gate"){
+          echo '*************** Stage: Check Qulity Gate  **************'
+          sleep 30
+
+          def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
+              if (qg.status != 'OK') {
+              error "Pipeline aborted due to quality gate failure: ${qg.status}"
+          }
+      }
+
+      stage('Archieve') {
+          def currentDate = Calendar.getInstance().getTime().format('YYYYMMdd',TimeZone.getTimeZone('Asia/Bangkok'))
+          if (!params.containsKey("version") || version.isEmpty()) {
+              version = "1.0.0"
+          }
+          appVersion = version + '-BUILD' + currentDate + '-' + BUILD_NUMBER
+          echo appVersion
+
+          nexusArtifactUploader artifacts: [[artifactId: "com.${appName}", classifier: '', file: "./app/target/${appName}-0.0.1-SNAPSHOT.jar", type: 'jar']], credentialsId: "${nexusCredentialsId}", groupId: "com.${appName}", nexusUrl: "${nexusBaseURL}", nexusVersion: 'nexus3', protocol: 'https', repository: 'A0448_NFE', version: "${appVersion}"
+
+      }
+
+      stage ('Build Image'){
+          echo '*************** Stage: Build Image **************'
+          dir ('./app'){
+              withCredentials([usernamePassword(credentialsId: "${nexusCredentialsId}", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                  sh """
+                  curl -k -X GET -u ${USERNAME}:${PASSWORD} -o ${appName}.jar https://${nexusBaseURL}/repository/feuam_lib/com/${appName}/com.${appName}/${appVersion}.${BUILD_NUMBER}/com.${appName}-${appVersion}.jar
+                  sudo docker build -t ${appName} .
+                  sudo docker tag ${appName}:latest ${nexusDockerURL}/${appName}:${appVersion}
+                  sudo docker login -u=${USERNAME} -p=${PASSWORD} ${nexusDockerURL}
+                  sudo docker push ${nexusDockerURL}/${appName}:${appVersion}
+                  """
+              }
+
+          }
+      }
+
+      stage('Copy Image'){
+          echo '*************** Stage: Copy Build Image from Nexus to Openshift Registry **************'
+          openshift.withCluster('DC2D1') {
+              openshift.withProject("${ocp_project}") {
+                  echo "In project ${openshift.project()} in cluster ${openshift.cluster()}"
+
+                  def res = openshift.raw("whoami -t").out
+
+                  withCredentials([usernamePassword(credentialsId: "${nexusCredentialsId}", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                      echo "Copy DBchange image"
+                      sh """
+                          skopeo copy \
+                          docker://${nexusDockerURL}/${appName}:${appVersion} \
+                          docker://default-route-openshift-image-registry.apps.dc2d1.tmbcps.com/${ocp_project}/${appName}:latest \
+                          --src-tls-verify=false --dest-tls-verify=false \
+                          --src-creds=${USERNAME}:${PASSWORD} --dest-creds=openshift:\$(oc whoami -t)
+                      """
+                  }
+              }
+          }
+      }
+
+      stage('OC Clean Configmap') {
+          echo '*************** Stage: Delete Config Map on Openshift **************'
+          dir ('.'){
+              openshift.withCluster('DC2D1') {
+                  openshift.withProject("${ocp_project}") {
+                      echo "In project ${openshift.project()} in cluster ${openshift.cluster()}"
+
+                      def oldConfigMap = openshift.selector("configmap", "${appName}-config")
+                      if (oldConfigMap.exists()) {
+                          def ocDeleteResult = oldConfigMap.delete()
+                          echo "Result Delete ConfigMap: ${ocDeleteResult}"
+                      }
+                  }
+              }
+          }
+      }
+
+      stage('OC Create ConfigMap') {
+          echo '*************** Stage: Create Config Map on Openshift **************'
+          dir ('.'){
+              openshift.withCluster('DC2D1') {
+                  openshift.withProject("${ocp_project}") {
+                      echo "In project ${openshift.project()} in cluster ${openshift.cluster()}"
+                      def ocCreateResult = openshift.raw("create configmap ${appName}-config \
+                      --from-env-file=${fileConfigmap} \
+                      --from-file=config/ \
+                      --from-file=cert/")
+                      echo "Result Create ConfigMap: ${ocCreateResult}"
+                  }
+              }
+          }
+      }
+
+
+      stage('OC Clean Secret') {
+          echo '*************** Stage: Delete Secret on Openshift **************'
+          dir ('.'){
+              openshift.withCluster('DC2D1') {
+                  openshift.withProject("${ocp_project}") {
+                      echo "In project ${openshift.project()} in cluster ${openshift.cluster()}"
+
+                      def oldSecret = openshift.selector("secret", "${appName}-secret")
+                      if (oldSecret.exists()) {
+                          def ocDeleteResult = oldSecret.delete()
+                          echo "Result Delete Secret: ${ocDeleteResult}"
+                      }
+                  }
+              }
+          }
+      }
+
+      stage('OC Create Secret') {
+          echo '*************** Stage: Create Secret on Openshift **************'
+          dir ('.'){
+              openshift.withCluster('DC2D1') {
+                  openshift.withProject("${ocp_project}") {
+                      echo "In project ${openshift.project()} in cluster ${openshift.cluster()}"
+                      def ocCreateResult = openshift.raw("create secret generic ${appName}-secret \
+                      --from-file=${fileSecret} \
+                      --from-file=PRIVATEKEY=${fileprivateKey}")
+                      echo "Result Create Secret: ${ocCreateResult}"
+                  }
+              }
+          }
+      }
+
+      stage('OC Deploy') {
+          echo '*************** Stage: Deploy App to Openshift **************'
+
+          openshift.withCluster('DC2D1') {
+              openshift.withProject("${ocp_project}") {
+                  echo "In project ${openshift.project()} in cluster ${openshift.cluster()}"
+
+                  def ocDeployResult = openshift.apply(openshift.raw("process -f ${deployment_file} -n ${ocp_project} \
+                      -p NAME='${appName}' \
+                      -p NAMESPACE='${ocp_project}' \
+                      -p MEMORY_LIMIT='${memory_limit}' \
+                      -p MEMORY_REQUEST='${memory_request}' \
+                      -p CPU_LIMIT='${cpu_limit}' \
+                      -p CPU_REQUEST='${cpu_request}'").actions[0].out)
+
+                  def dc = openshift.selector('dc', "${appName}")
+
+                  def result = dc.rollout().status()
+                  echo "${result}"
+                  if(result.actions[0].out.indexOf('updated')==-1){
+                      dc.rollout().latest()
+                      def reroll = dc.rollout().status()
+                      echo "${reroll}"
+                  }
+
+                  // this will wait until the desired replicas are available
+                  dc.rollout().status()
+              }
+          }
+      }
+
+      stage('Cleanup') {
+          sh 'rm -rf ./app'
+          // mail body: 'project build successful',
+          //             from: 'xxxx@yyyyy.com',
+          //             replyTo: 'xxxx@yyyy.com',
+          //             subject: 'project build successful',
+          //             to: 'yyyyy@yyyy.com'
+          sh "sudo update-alternatives --set java /usr/java/jdk1.8.0_191-amd64/jre/bin/java"
+      }
+
+    }catch (err) {
+        echo "error: " + err.toString()
+        currentBuild.result = 'FAILURE'
+        sh "sudo update-alternatives --set java /usr/java/jdk1.8.0_191-amd64/jre/bin/java"
+
+    }
+}

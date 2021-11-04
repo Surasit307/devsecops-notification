@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class smsControllerTest {
+class SmsControllerTest {
 
-    @Test
+    //@Test
     void sendSms() {
     }
 }

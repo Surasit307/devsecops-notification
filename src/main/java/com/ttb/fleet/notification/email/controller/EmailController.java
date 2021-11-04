@@ -6,7 +6,7 @@ import com.ttb.fleet.notification.common.dto.ApiStatusOut;
 import com.ttb.fleet.notification.common.dto.ResponseOut;
 import com.ttb.fleet.notification.common.utils.StopWatch;
 import com.ttb.fleet.notification.email.dto.EmailIn;
-import com.ttb.fleet.notification.email.service.emailService;
+import com.ttb.fleet.notification.email.service.EmailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
-public class emailController {
+public class EmailController {
 
-    private final Logger logger = LoggerFactory.getLogger(emailController.class);
+    private final Logger logger = LoggerFactory.getLogger(EmailController.class);
 
     @Autowired
-    private emailService emailservice;
+    private EmailService emailservice;
 
     @PostMapping("/v1/email")
     public ResponseEntity<ResponseOut> SendEmail(@RequestHeader Map<String, String> headers, @RequestBody(required = false) EmailIn body) {

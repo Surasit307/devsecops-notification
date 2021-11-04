@@ -3,7 +3,7 @@ package com.ttb.fleet.notification.email.controller;
 import com.ttb.fleet.notification.common.dto.ResponseOut;
 import com.ttb.fleet.notification.email.dto.EmailIn;
 import com.ttb.fleet.notification.email.dto.EmailOut;
-import com.ttb.fleet.notification.email.service.Impl.emailServiceImpl;
+import com.ttb.fleet.notification.email.service.impl.emailServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,10 +24,10 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-class emailControllerTest {
+class EmailControllerTest {
     private static final SimpleDateFormat simpledateformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
     @InjectMocks
-    private emailController emailcontroller;
+    private EmailController emailcontroller;
     @Mock
     private emailServiceImpl emailservice;
 

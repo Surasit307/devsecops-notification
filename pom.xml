@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.ttb.fleet</groupId>
-    <artifactId>notification</artifactId>
+    <artifactId>fleet-notification</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>notification</name>
+    <name>fleet-notification</name>
     <description>Notification Module for Fleet</description>
     <properties>
         <java.version>11</java.version>

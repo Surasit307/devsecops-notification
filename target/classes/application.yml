@@ -21,17 +21,27 @@ spring:
   main:
     banner-mode: CONSOLE
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    generate-ddl: true
-    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update
-
+      ddl-auto: none
+      show-sql: true
   datasource:
-    url: ${DATABASE_URL:"jdbc:postgresql://localhost:3306/db"}
-    username: ${DATABASE_USER}
-    password: ${DATABASE_PASSWORD}
-    driver-class-name: org.postgresql.Driver
+    url: ${DATABASE_CONNECTION:jdbc:postgresql://localhost:5432/notification?currentSchema=public}
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:changeit}
+    initialization-mode: always
+    platform: postgres
+  nacos:
+    discovery:
+      server-addr: ${NACOS_ENDPOINT:127.0.0.1:8848}
+      auto-register: true
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_ENDPOINT:127.0.0.1:8848}
+        namespace: ${NACOS_NAMESPACE:9cd826a1-2bb5-4eeb-a2fb-20cb95ea65f2}
 
 
 

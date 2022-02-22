@@ -1,5 +1,5 @@
-/Users/rujji/Workspace/java/microservice/notification/src/test/java/com/ttb/fleet/notification/sms/controller/smsControllerTest.java
-/Users/rujji/Workspace/java/microservice/notification/src/test/java/com/ttb/fleet/notification/email/service/Impl/emailServiceImplTest.java
-/Users/rujji/Workspace/java/microservice/notification/src/test/java/com/ttb/fleet/notification/sms/service/Impl/smsServiceImplTest.java
-/Users/rujji/Workspace/java/microservice/notification/src/test/java/com/ttb/fleet/notification/NotificationApplicationTests.java
-/Users/rujji/Workspace/java/microservice/notification/src/test/java/com/ttb/fleet/notification/email/controller/emailControllerTest.java
+D:\Work\TTB\SCM\gitlab\ttb-fleet-notification\src\test\java\com\ttb\fleet\notification\email\controller\EmailControllerTest.java
+D:\Work\TTB\SCM\gitlab\ttb-fleet-notification\src\test\java\com\ttb\fleet\notification\sms\service\impl\SmsServiceImplTest.java
+D:\Work\TTB\SCM\gitlab\ttb-fleet-notification\src\test\java\com\ttb\fleet\notification\email\service\impl\EmailServiceImplTest.java
+D:\Work\TTB\SCM\gitlab\ttb-fleet-notification\src\test\java\com\ttb\fleet\notification\sms\controller\SmsControllerTest.java
+D:\Work\TTB\SCM\gitlab\ttb-fleet-notification\src\test\java\com\ttb\fleet\notification\NotificationApplicationTests.java

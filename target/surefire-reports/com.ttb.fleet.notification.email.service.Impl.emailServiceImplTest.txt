@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.ttb.fleet.notification.email.service.Impl.emailServiceImplTest
--------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s - in com.ttb.fleet.notification.email.service.Impl.emailServiceImplTest

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>smsController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">notification</a> &gt; <a href="index.source.html" class="el_package">com.ttb.fleet.notification.sms.controller</a> &gt; <span class="el_source">smsController.java</span></div><h1>smsController.java</h1><pre class="source lang-java linenums">package com.ttb.fleet.notification.sms.controller;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SmsController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fleet-notification</a> &gt; <a href="index.source.html" class="el_package">com.ttb.fleet.notification.sms.controller</a> &gt; <span class="el_source">SmsController.java</span></div><h1>SmsController.java</h1><pre class="source lang-java linenums">package com.ttb.fleet.notification.sms.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,7 +6,7 @@ import com.ttb.fleet.notification.common.dto.ApiStatusOut;
 import com.ttb.fleet.notification.common.dto.ResponseOut;
 import com.ttb.fleet.notification.common.utils.StopWatch;
 import com.ttb.fleet.notification.sms.dto.SmsIn;
-import com.ttb.fleet.notification.sms.service.smsService;
+import com.ttb.fleet.notification.sms.service.SmsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +19,11 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(&quot;/api&quot;)
-<span class="fc" id="L22">public class smsController {</span>
-<span class="fc" id="L23">    private final Logger logger = LoggerFactory.getLogger(smsController.class);</span>
+<span class="fc" id="L22">public class SmsController {</span>
+<span class="fc" id="L23">    private final Logger logger = LoggerFactory.getLogger(SmsController.class);</span>
 
     @Autowired
-    private smsService smsservice;
+    private SmsService smsservice;
 
     @PostMapping(&quot;/v1/sms&quot;)
     public ResponseEntity&lt;ResponseOut&gt; SendSms(@RequestHeader Map&lt;String, String&gt; headers, @RequestBody(required = false) SmsIn body) {

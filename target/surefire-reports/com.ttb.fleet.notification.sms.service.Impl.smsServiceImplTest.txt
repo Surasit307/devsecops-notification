@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
-Test set: com.ttb.fleet.notification.sms.service.Impl.smsServiceImplTest
+Test set: com.ttb.fleet.notification.sms.service.impl.SmsServiceImplTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s - in com.ttb.fleet.notification.sms.service.Impl.smsServiceImplTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s - in com.ttb.fleet.notification.sms.service.impl.SmsServiceImplTest

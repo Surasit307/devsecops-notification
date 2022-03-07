@@ -22,7 +22,7 @@ VOLUME /tmp
 EXPOSE 8081
 
 # Add the application's JAR file to the container
-COPY ${JAR_FILE} /application.jar
+COPY ${JAR_FILE} application.jar
 
 # Run the JAR file
 # ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-Dspring.config.location=file:///deployments/config/,file:///central/config/", "-jar", "/application.jar"]

@@ -30,7 +30,7 @@ spring:
   datasource:
     url: ${DATABASE_CONNECTION:jdbc:postgresql://localhost:5432/notification?currentSchema=public}
     username: ${DATABASE_USERNAME:postgres}
-    password: ${DATABASE_PASSWORD:changeit}
+    password: ${DATABASE_PASSWORD:nttdata}
     initialization-mode: always
     platform: postgres
   nacos:
@@ -43,8 +43,26 @@ spring:
         server-addr: ${NACOS_ENDPOINT:127.0.0.1:8848}
         namespace: ${NACOS_NAMESPACE:9cd826a1-2bb5-4eeb-a2fb-20cb95ea65f2}
 
-
-
+  mail:
+    host: ${SMTP_HOST:smtp.gmail.com}
+    port: ${SMTP_PORT:587}
+    username: applogicthailand@gmail.com
+    password:
+    # Other properties
+    smtp:
+      auth: true
+      connectiontimeout: 5000
+      timeout: 5000
+      writetimeout: 5000
+      starttls:
+        enable: true
+      ssl:
+        trust: smtp.gmail.com
+        protocols: TLSv1.2
+      # SSL, post 465
+#      socketFactory:
+#        port: 465
+#        class: javax.net.ssl.SSLSocketFactory
   application:
     name: fleet-notification
     description: ${applicaiton.name} module is a Spring Boot application
@@ -89,3 +107,6 @@ eureka:
   instance:
     preferIpAddress: true
 thread-pool: 20
+notification:
+  sms:
+    url: http://172.20.5.X/smsgw/smshttphandler_enc.ashx

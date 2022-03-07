@@ -13,7 +13,7 @@ public class SmsIn implements Serializable {
     private String[] mobile;
     @JsonProperty("message_id")
     private String msgid;
-    @JsonProperty("object")
+    @JsonProperty("replace_value")
     private Map<String, String> replace;
     @JsonProperty("language")
     private String language;

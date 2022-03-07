@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ttb.fleet.notification.common.dto.ApiStatusOut;
 import com.ttb.fleet.notification.common.dto.ResponseOut;
 import com.ttb.fleet.notification.common.utils.StopWatch;
+import com.ttb.fleet.notification.common.utils.Template;
 import com.ttb.fleet.notification.email.dto.EmailIn;
 import com.ttb.fleet.notification.email.service.EmailService;
 import org.slf4j.Logger;
@@ -14,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -21,10 +24,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 public class EmailController {
 
-    private final Logger logger = LoggerFactory.getLogger(EmailController.class);
-
     @Autowired
     private EmailService emailservice;
+
+    private final Logger logger = LoggerFactory.getLogger(EmailController.class);
+    private Template template = new Template();
 
     @PostMapping("/v1/email")
     public ResponseEntity<ResponseOut> SendEmail(@RequestHeader Map<String, String> headers, @RequestBody(required = false) EmailIn body) {
@@ -33,9 +37,6 @@ public class EmailController {
         logger.info(String.format("SendEmail Controller Request Header: %s", headers.keySet().stream()
                 .map(key -> key + ":" + headers.get(key))
                 .collect(Collectors.joining(", ", "{", "}"))));
-//        logger.info(String.format("generateOTP Controller Request Body: %s", body.keySet().stream()
-//                .map(key -> key + ":" + body.get(key))
-//                .collect(Collectors.joining(", ", "{", "}"))));
         ApiStatusOut apistatus = new ApiStatusOut();
         ResponseOut response = new ResponseOut();
         try {
@@ -46,7 +47,7 @@ public class EmailController {
                 response.setApiStatus(apistatus);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
-            if (body.getMessageId() == null) {
+            if (body.getMessageId() == 0) {
                 apistatus.setCode("E4002");
                 apistatus.setBusinessMessage("Require field missing");
                 apistatus.setDeveloperMessage("parameter message_id is missing");
@@ -73,6 +74,11 @@ public class EmailController {
         } catch (JsonProcessingException e) {
             apistatus.setCode("E5000");
             apistatus.setBusinessMessage("Service Not Available");
+            apistatus.setDeveloperMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        } catch (MessagingException | IOException e) {
+            apistatus.setCode("E5000");
+            apistatus.setBusinessMessage("Incorrect mail format");
             apistatus.setDeveloperMessage(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }

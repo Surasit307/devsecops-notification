@@ -1,5 +1,7 @@
 package com.ttb.fleet.notification.sms.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.ttb.fleet.notification.common.utils.Template;
 import com.ttb.fleet.notification.entity.Message;
 import com.ttb.fleet.notification.repository.MessageRepository;
@@ -13,6 +15,8 @@ import org.apache.velocity.runtime.resource.util.StringResourceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -20,6 +24,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.StringWriter;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,13 +32,14 @@ import java.util.Map;
 public class SmsServiceImpl implements SmsService {
     @Autowired
     private MessageRepository messagerepo;
-
     private final Logger logger = LoggerFactory.getLogger(SmsService.class);
     private static final SimpleDateFormat simpledateformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+    @Value("${notification.sms.url}")
+    private String notificationSmsUrl;
     private Template template = new Template();
 
     @Override
-    public SmsOut send(String requestId,String[] mobiles, int msgid, Map<String, String> replace, String language) {
+    public SmsOut send(String requestId,String[] msisdns, int msgid, Map<String, String> replace, String language) throws Exception {
         logger.debug("Request:");
         // TODO: query message from MessageRepository
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -41,26 +47,32 @@ public class SmsServiceImpl implements SmsService {
         SmsOut smsout = new SmsOut();
         if(message == null){
             smsout.setStatus("message id Not Found");
-
             smsout.setRequestedTimeStamp(simpledateformat.format(timestamp));
         } else {
             smsout.setStatus("success");
             String subject = message.getSubject();
             String content = template.stringTemplate(message.getContent(), replace);
-            for (String mobile:mobiles) {
-                sendRequestToSmsGw("" + mobile, mobile, subject, content);
+            ResponseEntity<String> smsGwResponse = null;
+            ArrayList<String> failMsisdn = new ArrayList<>();
+            for (String msisdn:msisdns) {
+                smsGwResponse = sendRequestToSmsGw(msisdn, subject, content);
+                if(smsGwResponse.getStatusCode() != HttpStatus.OK){
+                    failMsisdn.add(msisdn);
+                }
+            }
+            if(failMsisdn.size() > 0){
+                smsout.setFailMobileNumbers((String[]) failMsisdn.toArray());
             }
         }
-
         return smsout;
     }
 
-    private ResponseEntity<String> sendRequestToSmsGw(String recipientName, String smsNumber, String smsSubject, String smsContent) {
-        StringBuilder urlStringBuilder = new StringBuilder("?");
+    private ResponseEntity<String> sendRequestToSmsGw(String msisdn, String smsSubject, String smsContent) throws Exception {
+        StringBuilder urlStringBuilder = new StringBuilder(notificationSmsUrl + "?");
         urlStringBuilder.append("Batch_No=").append(getBatchNo()).append("&");
         urlStringBuilder.append("Bank_Ref=").append(getBankRef()).append("&");
         urlStringBuilder.append("Product_code=").append("OTH-XXX").append("&");
-        urlStringBuilder.append("SMS_Number=").append(smsNumber).append("&");
+        urlStringBuilder.append("SMS_Number=").append(msisdn).append("&");
         urlStringBuilder.append("SMS_Subject=").append(smsSubject).append("&");
         urlStringBuilder.append("SMS_Content=").append(smsContent).append("&");
         urlStringBuilder.append("Sender_Info=").append("5432 - CBG E-Banking").append("&");

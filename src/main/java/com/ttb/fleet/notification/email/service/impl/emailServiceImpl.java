@@ -36,13 +36,12 @@ public class emailServiceImpl implements EmailService {
     private Template template = new Template();
 
     @Override
-    public EmailOut send(String requestedId,String[] to, int messageId, Map<String,String> replace, String language) throws MessagingException, IOException {
-        return send(requestedId, to, messageId, replace, language, null);
+    public EmailOut send(String requestedId,String[] to, int messageId, Map<String,String> replaceSubject, Map<String,String> replaceBody, String language) throws Exception {
+        return send(requestedId, to, messageId, replaceSubject, replaceBody, language, null);
     }
 
     @Override
-    public EmailOut send(String requestedId,String[] to, int messageId, Map<String,String> replace, String language, Object attachment) throws MessagingException, IOException {
-        logger.debug("Request:");
+    public EmailOut send(String requestedId,String[] to, int messageId, Map<String,String> replaceSubject, Map<String,String> replaceBody, String language, Object attachment) throws Exception {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         Message message = messagerepo.findByMessageIdAndLanguage(messageId,language);
         EmailOut emailOut = new EmailOut();
@@ -52,14 +51,13 @@ public class emailServiceImpl implements EmailService {
             emailOut.setStatus("message id Not Found");
         } else {
             emailOut.setStatus("success");
-            String content = template.stringTemplate(message.getContent(), replace);
-
+            String subject = template.stringTemplate(message.getSubject(), replaceSubject);
+            String content = template.stringTemplate(message.getHtmlContent(), replaceBody);
             MimeMessage mailMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mailMessage, true);
             helper.setTo(to);
-            helper.setSubject(message.getSubject());
+            helper.setSubject(subject);
             helper.setText(content, true);
-//            helper.addAttachment("my_photo.png", new ClassPathResource("android.png"));
             javaMailSender.send(mailMessage);
         }
 

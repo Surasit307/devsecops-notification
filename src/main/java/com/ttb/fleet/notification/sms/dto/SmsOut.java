@@ -15,6 +15,9 @@ public class SmsOut implements Serializable {
     @JsonProperty("status")
     private String status;
 
+    @JsonProperty("fail_mobile_numbers")
+    private String[] failMobileNumbers;
+
     @JsonProperty("requested_timestamp")
     private String requestedTimeStamp;
 
@@ -32,6 +35,14 @@ public class SmsOut implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String[] getFailMobileNumbers() {
+        return failMobileNumbers;
+    }
+
+    public void setFailMobileNumbers(String[] failMobileNumbers) {
+        this.failMobileNumbers = failMobileNumbers;
     }
 
     public String getRequestedTimeStamp() {

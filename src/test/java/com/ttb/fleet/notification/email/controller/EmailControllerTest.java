@@ -43,8 +43,10 @@ class EmailControllerTest {
         emailout.setStatus("Success");
         emailout.setRequestedTimeStamp(simpledateformat.format(timestamp));
         try {
-            lenient().when(emailservice.send(Mockito.anyString(), new String[]{Mockito.anyString()}, Mockito.anyInt(), Mockito.anyMap(), Mockito.anyString())).thenReturn(emailout);
+            lenient().when(emailservice.send(Mockito.anyString(), new String[]{Mockito.anyString()}, Mockito.anyInt(), Mockito.anyMap(), Mockito.anyMap(), Mockito.anyString())).thenReturn(emailout);
         } catch (MessagingException | IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

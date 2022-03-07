@@ -33,7 +33,6 @@ public class MessageServiceImpl implements MessageService {
 
         messagerepo.save(message);
         String json = new Gson().toJson(message);
-        System.out.println(json);
         Map<String,Object> result = new ObjectMapper().readValue(json, HashMap.class);
         return result;
     }
@@ -42,7 +41,6 @@ public class MessageServiceImpl implements MessageService {
     public Map<String,Object> read(int messageId, String language) throws JsonProcessingException {
         Message message = messagerepo.findByMessageIdAndLanguage(messageId, language);
         String json = new Gson().toJson(message);
-        System.out.println(json);
         Map<String,Object> result = new ObjectMapper().readValue(json, HashMap.class);
         return result;
     }
@@ -63,7 +61,6 @@ public class MessageServiceImpl implements MessageService {
 
         message = messagerepo.save(message);
         String json = new Gson().toJson(message);
-        System.out.println(json);
         Map<String,Object> result = new ObjectMapper().readValue(json, HashMap.class);
         return result;
     }
@@ -73,7 +70,6 @@ public class MessageServiceImpl implements MessageService {
         Message message = messagerepo.findByMessageIdAndLanguage(messageId, language);
         messagerepo.delete(message);
         String json = new Gson().toJson(message);
-        System.out.println(json);
         Map<String,Object> result = new ObjectMapper().readValue(json, HashMap.class);
         return result;
     }

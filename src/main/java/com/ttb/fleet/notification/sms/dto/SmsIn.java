@@ -12,7 +12,7 @@ public class SmsIn implements Serializable {
     @JsonProperty("mobile")
     private String[] mobile;
     @JsonProperty("message_id")
-    private String msgid;
+    private Integer messageId;
     @JsonProperty("replace_value")
     private Map<String, String> replace;
     @JsonProperty("language")
@@ -26,12 +26,12 @@ public class SmsIn implements Serializable {
         this.mobile = mobile;
     }
 
-    public String getMsgid() {
-        return msgid;
+    public Integer getMessageId() {
+        return messageId;
     }
 
-    public void setMsgid(String msgid) {
-        this.msgid = msgid;
+    public void setMessageId(Integer msgid) {
+        this.messageId = msgid;
     }
 
     public Map<String, String> getReplace() {

@@ -16,13 +16,14 @@ public class EmailIn  implements Serializable {
     private int messageId;
     @JsonProperty("language")
     private String language;
-    @JsonProperty("replace_value")
-    private Map<String,String> replaceString;
+    @JsonProperty("replace_subject")
+    private Map<String,String> replaceSubject;
+    @JsonProperty("replace_body")
+    private Map<String,String> replaceBody;
 
     public String[] getTo() {
         return to;
     }
-
     public void setTo(String[] to) {
         this.to = to;
     }
@@ -30,7 +31,6 @@ public class EmailIn  implements Serializable {
     public int getMessageId() {
         return messageId;
     }
-
     public void setMessageId(int messageId) {
         this.messageId = messageId;
     }
@@ -38,15 +38,21 @@ public class EmailIn  implements Serializable {
     public String getLanguage() {
         return language;
     }
-
     public void setLanguage(String language) {
         this.language = language;
     }
-    public Map<String, String> getReplaceString() {
-        return replaceString;
+
+    public Map<String, String> getReplaceSubject() {
+        return replaceSubject;
+    }
+    public void setReplaceSubject(Map<String, String> replaceSubject) {
+        this.replaceSubject = replaceSubject;
     }
 
-    public void setReplaceString(Map<String, String> replaceString) {
-        this.replaceString = replaceString;
+    public Map<String, String> getReplaceBody() {
+        return replaceBody;
+    }
+    public void setReplaceBody(Map<String, String> replaceBody) {
+        this.replaceBody = replaceBody;
     }
 }

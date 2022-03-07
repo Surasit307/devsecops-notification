@@ -46,8 +46,8 @@ spring:
   mail:
     host: ${SMTP_HOST:smtp.gmail.com}
     port: ${SMTP_PORT:587}
-    username: applogicthailand@gmail.com
-    password:
+    username: ${SMTP_USERNAME}
+    password: ${SMTP_PASSWORD}
     # Other properties
     smtp:
       auth: true
@@ -69,9 +69,15 @@ spring:
 security:
   basic:
     enabled: false
+endpoints:
+  health:
+    sensitive: false
 management:
   security:
     enabled: false
+  endpoint:
+    health:
+      show-details: always
   endpoints:
     gateway:
       enable: true
@@ -84,6 +90,8 @@ management:
       discovery:
         enabled: false
     health:
+      defaults:
+        enabled: false
       ldap:
         enabled: false
       mail:
@@ -97,16 +105,9 @@ management:
             http-mapping:
               fatal: 500
               out-of-service: 500
-
 server:
   port: ${SERVICE_PORT:8081}
-eureka:
-  client:
-    service-url:
-      default-zone: ${EUREKA_URI:http://localhost:8761/eureka}
-  instance:
-    preferIpAddress: true
 thread-pool: 20
 notification:
   sms:
-    url: http://172.20.5.X/smsgw/smshttphandler_enc.ashx
+    url: ${SMS_ENDPOINT:http://172.20.5.X/smsgw/smshttphandler_enc.ashx}

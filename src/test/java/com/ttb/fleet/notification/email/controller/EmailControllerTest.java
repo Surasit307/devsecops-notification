@@ -15,6 +15,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -40,7 +42,11 @@ class EmailControllerTest {
         emailout.setRequestedId("46e062f8-5c43-43b0-9734-019112ae1a62");
         emailout.setStatus("Success");
         emailout.setRequestedTimeStamp(simpledateformat.format(timestamp));
-        lenient().when(emailservice.send(Mockito.anyString(), new String[]{Mockito.anyString()}, Mockito.anyString(), Mockito.anyMap(), Mockito.anyString())).thenReturn(emailout);
+        try {
+            lenient().when(emailservice.send(Mockito.anyString(), new String[]{Mockito.anyString()}, Mockito.anyInt(), Mockito.anyMap(), Mockito.anyString())).thenReturn(emailout);
+        } catch (MessagingException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -57,7 +63,7 @@ class EmailControllerTest {
         header.put("x-system", "FE-fleet-customer");
 
         EmailIn emailin = new EmailIn();
-        emailin.setMessageId("MSGE0001");
+        emailin.setMessageId(1);
         emailin.setLanguage("th");
         emailin.setTo(new String[]{"sender@example.com", "test@example.com"});
 
@@ -80,7 +86,7 @@ class EmailControllerTest {
         header.put("x-system", "FE-fleet-customer");
 
         EmailIn emailin = new EmailIn();
-        emailin.setMessageId("MSGE0001");
+        emailin.setMessageId(1);
         emailin.setLanguage("th");
 
         ResponseEntity<ResponseOut> response = emailcontroller.SendEmail(header, emailin);
@@ -123,7 +129,7 @@ class EmailControllerTest {
 
         EmailIn emailin = new EmailIn();
         emailin.setTo(new String[]{"sender@example.com", "test@example.com"});
-        emailin.setMessageId("MSGE0001");
+        emailin.setMessageId(1);
 
         ResponseEntity<ResponseOut> response = emailcontroller.SendEmail(header, emailin);
         Assertions.assertThat(response.getBody().getApiStatus().getCode()).isEqualTo("E4003");

@@ -32,19 +32,18 @@ public class SmsController {
         logger.info(String.format("SendEmail Controller Request Header: %s", headers.keySet().stream()
                 .map(key -> key + ":" + headers.get(key))
                 .collect(Collectors.joining(", ", "{", "}"))));
-
         try {
             // TODO: Implement Input Validation
             // TODO: Implement Business Logic
             ApiStatusOut apistatus = new ApiStatusOut();
             apistatus.setCode("S0000");
-            apistatus.setBusinessMessage("Email Sending Successful");
+            apistatus.setBusinessMessage("SMS Sending Successful");
             apistatus.setDeveloperMessage("Success");
             ResponseOut response = new ResponseOut();
             response.setApiStatus(apistatus);
-            response.setData((Map<String, Object>) smsservice.send(headers.get("x-requested-id"), body.getMobile(), body.getMsgid(), body.getReplace(), body.getLanguage()));
-            logger.info(String.format("SendEmail Controller Response: %s", mapper.writeValueAsString(response)));
-            logger.info(String.format("SendEmail Controller elapse time %.4f seconds", watch.elapsedTime()));
+//            response.setData((Map<String, Object>) smsservice.send(headers.get("x-requested-id"), body.getMobile(), body.getMsgid(), body.getReplace(), body.getLanguage()));
+            logger.info(String.format("SendSMS Controller Response: %s", mapper.writeValueAsString(response)));
+            logger.info(String.format("SendSMS Controller elapse time %.4f seconds", watch.elapsedTime()));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } catch (JsonProcessingException e) {
             ApiStatusOut apistatus = new ApiStatusOut();
@@ -55,5 +54,9 @@ public class SmsController {
             response.setApiStatus(apistatus);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
+    }
+
+    private String sendSmsSoapRequest() {
+        return "";
     }
 }

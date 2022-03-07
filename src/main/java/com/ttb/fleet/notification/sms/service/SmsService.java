@@ -6,5 +6,5 @@ import java.util.Map;
 
 public interface SmsService {
 
-    public SmsOut send(String requestId, String[] mobile, String msgid, Map<String, String> replace, String language);
+    public SmsOut send(String requestId, String[] mobile, int msgid, Map<String, String> replace, String language);
 }

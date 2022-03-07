@@ -13,10 +13,10 @@ public class EmailIn  implements Serializable {
     @JsonProperty("to")
     private String[] to;
     @JsonProperty("message_id")
-    private String messageId;
-    @JsonProperty("langiage")
+    private int messageId;
+    @JsonProperty("language")
     private String language;
-    @JsonProperty("object")
+    @JsonProperty("replace_value")
     private Map<String,String> replaceString;
 
     public String[] getTo() {
@@ -27,11 +27,11 @@ public class EmailIn  implements Serializable {
         this.to = to;
     }
 
-    public String getMessageId() {
+    public int getMessageId() {
         return messageId;
     }
 
-    public void setMessageId(String messageId) {
+    public void setMessageId(int messageId) {
         this.messageId = messageId;
     }
 

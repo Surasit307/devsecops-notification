@@ -41,6 +41,8 @@ public class SmsServiceImpl implements SmsService {
     private String notificationSmsChannelId;
     @Value("${notification.sms.senderInfo}")
     private String notificationSenderInfo;
+    @Value("${notification.sms.productCode}")
+    private String notificationSmsProductCode;
     private SimpleDateFormat dateTimeSec = new SimpleDateFormat("yyyyMMddHHmmss");
     private SimpleDateFormat milliSec = new SimpleDateFormat("SSS");
     private Template template = new Template();
@@ -83,8 +85,13 @@ public class SmsServiceImpl implements SmsService {
         urlStringBuilder.append("SMS_Subject=").append(smsSubject).append("&");
         urlStringBuilder.append("SMS_Content=").append(smsContent).append("&");
         urlStringBuilder.append("Sender_Info=").append(notificationSenderInfo).append("&");
+
+        String urlRequest = urlStringBuilder.toString();
+        logger.info("SMSGW request {" + urlRequest + "}");
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity( urlStringBuilder.toString(), String.class );
+        logger.info("SMSGW response_code {" + response.getStatusCode() + "}");
+        logger.info("SMSGW response_body {" + response.getBody() + "}");
         return response;
     }
 
@@ -103,7 +110,7 @@ public class SmsServiceImpl implements SmsService {
     }
 
     private String getProductCode(){
-        return "OTH-" + notificationSmsChannelId;
+        return notificationSmsProductCode;
     }
 
 }

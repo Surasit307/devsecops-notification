@@ -1,11 +1,7 @@
-CREATE DATABASE fleetnotification;
+CREATE DATABASE fleetdb.notification;
 
--- Drop table
-
--- DROP TABLE public.message;
-
-CREATE TABLE message (
-	message_id varchar(10) NOT NULL,
+CREATE TABLE notification.message (
+	message_id SERIAL PRIMARY KEY,
 	"content" varchar(255) NULL,
 	"html_content" text null,
 	"language" varchar(255) NULL,    -- "TH", "EN"
@@ -14,6 +10,5 @@ CREATE TABLE message (
     create_by varchar(255) NULL,
     create_on timestamp NULL,
 	update_by varchar(255) NULL,
-	update_on timestamp NULL,
-	CONSTRAINT message_pkey PRIMARY KEY (message_id)
+	update_on timestamp NULL
 );

@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.StringWriter;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -82,8 +84,8 @@ public class SmsServiceImpl implements SmsService {
         urlStringBuilder.append("Bank_Ref=").append(getBankRef()).append("&");
         urlStringBuilder.append("Product_code=").append(getProductCode()).append("&");
         urlStringBuilder.append("SMS_Number=").append(msisdn).append("&");
-        urlStringBuilder.append("SMS_Subject=").append(smsSubject).append("&");
-        urlStringBuilder.append("SMS_Content=").append(smsContent).append("&");
+        urlStringBuilder.append("SMS_Subject=").append(URLEncoder.encode(smsSubject, StandardCharsets.UTF_8.toString())).append("&");
+        urlStringBuilder.append("SMS_Content=").append(URLEncoder.encode(smsContent, StandardCharsets.UTF_8.toString())).append("&");
         urlStringBuilder.append("Sender_Info=").append(notificationSenderInfo).append("&");
 
         String urlRequest = urlStringBuilder.toString();

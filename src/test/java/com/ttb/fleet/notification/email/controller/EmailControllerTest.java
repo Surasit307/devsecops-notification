@@ -66,7 +66,7 @@ class EmailControllerTest {
 
         EmailIn emailin = new EmailIn();
         emailin.setMessageId(1);
-        emailin.setLanguage("th");
+        emailin.setLanguage("en");
         emailin.setTo(new String[]{"sender@example.com", "test@example.com"});
 
         ResponseEntity<ResponseOut> response = emailcontroller.SendEmail(header, emailin);

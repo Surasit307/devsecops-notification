@@ -25,6 +25,7 @@ import java.io.StringWriter;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +37,12 @@ public class SmsServiceImpl implements SmsService {
     private static final SimpleDateFormat simpledateformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
     @Value("${notification.sms.url}")
     private String notificationSmsUrl;
+    @Value("${notification.sms.channelId}")
+    private String notificationSmsChannelId;
+    @Value("${notification.sms.senderInfo}")
+    private String notificationSenderInfo;
+    private SimpleDateFormat dateTimeSec = new SimpleDateFormat("yyyyMMddHHmmss");
+    private SimpleDateFormat milliSec = new SimpleDateFormat("SSS");
     private Template template = new Template();
 
     @Override
@@ -71,22 +78,32 @@ public class SmsServiceImpl implements SmsService {
         StringBuilder urlStringBuilder = new StringBuilder(notificationSmsUrl + "?");
         urlStringBuilder.append("Batch_No=").append(getBatchNo()).append("&");
         urlStringBuilder.append("Bank_Ref=").append(getBankRef()).append("&");
-        urlStringBuilder.append("Product_code=").append("OTH-XXX").append("&");
+        urlStringBuilder.append("Product_code=").append(getProductCode()).append("&");
         urlStringBuilder.append("SMS_Number=").append(msisdn).append("&");
         urlStringBuilder.append("SMS_Subject=").append(smsSubject).append("&");
         urlStringBuilder.append("SMS_Content=").append(smsContent).append("&");
-        urlStringBuilder.append("Sender_Info=").append("5432 - CBG E-Banking").append("&");
+        urlStringBuilder.append("Sender_Info=").append(notificationSenderInfo).append("&");
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity( urlStringBuilder.toString(), String.class );
         return response;
     }
 
     private String getBatchNo(){
-        return "2007110909010201";
+        Date date = new Date();
+        String prefix = dateTimeSec.format(date);
+        String strMilliSec = milliSec.format(date);
+        strMilliSec = strMilliSec.substring(1);
+        return prefix + strMilliSec;
     }
 
     private String getBankRef(){
-        return "OTHXXX20071109090102";
+        Date date = new Date();
+        String suffix = dateTimeSec.format(date);
+        return "OTH" + notificationSmsChannelId + suffix;
+    }
+
+    private String getProductCode(){
+        return "OTH-" + notificationSmsChannelId;
     }
 
 }

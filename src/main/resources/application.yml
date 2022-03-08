@@ -110,3 +110,5 @@ thread-pool: 20
 notification:
   sms:
     url: http://172.28.12.36:8082/smsgw/smshttphandler_enc.ashx
+    channelId: XXX
+    senderInfo: 5432 - CBG E-Banking

@@ -10,8 +10,6 @@ import java.util.Map;
 
 import com.ttb.fleet.notification.common.utils.Template;
 import com.ttb.fleet.notification.entity.Message;
-import com.ttb.fleet.notification.entity.MessageLog;
-import com.ttb.fleet.notification.logging.service.LoggingService;
 import com.ttb.fleet.notification.repository.MessageRepository;
 import com.ttb.fleet.notification.sms.dto.SmsOut;
 import com.ttb.fleet.notification.sms.service.SmsService;
@@ -29,9 +27,6 @@ import org.springframework.web.client.RestTemplate;
 public class SmsServiceImpl implements SmsService {
     @Autowired
     private MessageRepository messagerepo;
-    @Autowired
-    private LoggingService loggingService;
-    
     private final Logger logger = LoggerFactory.getLogger(SmsService.class);
     private static final SimpleDateFormat simpledateformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
     @Value("${notification.sms.url}")
@@ -49,6 +44,7 @@ public class SmsServiceImpl implements SmsService {
     @Override
     public SmsOut send(String requestId,String[] msisdns, int msgid, Map<String, String> replace, String language) throws Exception {
         logger.debug("Request:");
+     
         // TODO: query message from MessageRepository
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         Message message = messagerepo.findByMessageIdAndLanguage(msgid,language);
@@ -59,25 +55,15 @@ public class SmsServiceImpl implements SmsService {
         } else {
             smsout.setStatus("success");
             String subject = message.getSubject();
-            String content = template.stringTemplate(message.getContent(), replace);  
+            String content = template.stringTemplate(message.getContent(), replace);
             ResponseEntity<String> smsGwResponse = null;
             ArrayList<String> failMsisdn = new ArrayList<>();
             for (String msisdn:msisdns) {
-            	MessageLog log = loggingService.createLog(Integer.toString(msgid) , subject, content, "SMS",msisdn);
-               
-            	try {
-            		smsGwResponse = sendRequestToSmsGw(msisdn, subject, content);
-            	}catch(Exception e) {
-            		 loggingService.updateLog(log.getId(), "Error", e.getMessage());
-            		throw e;
-            	}
-            	
-
+                smsGwResponse = sendRequestToSmsGw(msisdn, subject, content);
                 if(smsGwResponse.getStatusCode() != HttpStatus.OK){
                     failMsisdn.add(msisdn);
                 }
-                //TODO : Update Log
-                loggingService.updateLog(log.getId(), smsGwResponse.getStatusCode().toString(), smsGwResponse.getBody());
+                
                 
             }
             if(failMsisdn.size() > 0){

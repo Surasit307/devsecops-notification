@@ -58,14 +58,12 @@ public class emailServiceImpl implements EmailService {
             emailOut.setStatus("success");
             String subject = template.stringTemplate(message.getSubject(), replaceSubject);
             String content = template.stringTemplate(message.getHtmlContent(), replaceBody);
-            MessageLog log = loggingService.createLog(Integer.toString(messageId) , subject, content, "EMAIL",String.join(",", to));
             MimeMessage mailMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mailMessage, true);
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(content, true);
             javaMailSender.send(mailMessage);
-            loggingService.updateLog(log.getId(), "success", null);
         }
 
         return emailOut;

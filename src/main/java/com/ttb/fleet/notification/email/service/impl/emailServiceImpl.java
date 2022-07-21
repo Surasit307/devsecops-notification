@@ -3,6 +3,8 @@ package com.ttb.fleet.notification.email.service.impl;
 import com.ttb.fleet.notification.common.utils.Template;
 import com.ttb.fleet.notification.email.service.EmailService;
 import com.ttb.fleet.notification.entity.Message;
+import com.ttb.fleet.notification.entity.MessageLog;
+import com.ttb.fleet.notification.logging.service.LoggingService;
 import com.ttb.fleet.notification.repository.MessageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +32,9 @@ public class emailServiceImpl implements EmailService {
 
     @Autowired
     private MessageRepository messagerepo;
+    
+    @Autowired
+    private LoggingService loggingService;
 
     private final Logger logger = LoggerFactory.getLogger(EmailService.class);
     private static final SimpleDateFormat simpledateformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
@@ -53,12 +58,14 @@ public class emailServiceImpl implements EmailService {
             emailOut.setStatus("success");
             String subject = template.stringTemplate(message.getSubject(), replaceSubject);
             String content = template.stringTemplate(message.getHtmlContent(), replaceBody);
+            MessageLog log = loggingService.createLog(Integer.toString(messageId) , subject, content, "EMAIL",String.join(",", to));
             MimeMessage mailMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mailMessage, true);
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(content, true);
             javaMailSender.send(mailMessage);
+            loggingService.updateLog(log.getId(), "success", null);
         }
 
         return emailOut;

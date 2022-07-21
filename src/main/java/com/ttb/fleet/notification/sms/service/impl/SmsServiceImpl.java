@@ -1,17 +1,21 @@
 package com.ttb.fleet.notification.sms.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Map;
+
 import com.ttb.fleet.notification.common.utils.Template;
 import com.ttb.fleet.notification.entity.Message;
+import com.ttb.fleet.notification.entity.MessageLog;
+import com.ttb.fleet.notification.logging.service.LoggingService;
 import com.ttb.fleet.notification.repository.MessageRepository;
 import com.ttb.fleet.notification.sms.dto.SmsOut;
 import com.ttb.fleet.notification.sms.service.SmsService;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.runtime.resource.loader.StringResourceLoader;
-import org.apache.velocity.runtime.resource.util.StringResourceRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,20 +25,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.StringWriter;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 @Service
 public class SmsServiceImpl implements SmsService {
     @Autowired
     private MessageRepository messagerepo;
+    @Autowired
+    private LoggingService loggingService;
+    
     private final Logger logger = LoggerFactory.getLogger(SmsService.class);
     private static final SimpleDateFormat simpledateformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
     @Value("${notification.sms.url}")
@@ -62,14 +59,26 @@ public class SmsServiceImpl implements SmsService {
         } else {
             smsout.setStatus("success");
             String subject = message.getSubject();
-            String content = template.stringTemplate(message.getContent(), replace);
+            String content = template.stringTemplate(message.getContent(), replace);  
             ResponseEntity<String> smsGwResponse = null;
             ArrayList<String> failMsisdn = new ArrayList<>();
             for (String msisdn:msisdns) {
-                smsGwResponse = sendRequestToSmsGw(msisdn, subject, content);
+            	MessageLog log = loggingService.createLog(Integer.toString(msgid) , subject, content, "SMS",msisdn);
+               
+            	try {
+            		smsGwResponse = sendRequestToSmsGw(msisdn, subject, content);
+            	}catch(Exception e) {
+            		 loggingService.updateLog(log.getId(), "Error", e.getMessage());
+            		throw e;
+            	}
+            	
+
                 if(smsGwResponse.getStatusCode() != HttpStatus.OK){
                     failMsisdn.add(msisdn);
                 }
+                //TODO : Update Log
+                loggingService.updateLog(log.getId(), smsGwResponse.getStatusCode().toString(), smsGwResponse.getBody());
+                
             }
             if(failMsisdn.size() > 0){
                 smsout.setFailMobileNumbers((String[]) failMsisdn.toArray());
@@ -83,11 +92,18 @@ public class SmsServiceImpl implements SmsService {
         urlStringBuilder.append("Batch_No=").append(getBatchNo()).append("&");
         urlStringBuilder.append("Bank_Ref=").append(getBankRef()).append("&");
         urlStringBuilder.append("Product_code=").append(getProductCode()).append("&");
+        //Recipient_Name
+        //urlStringBuilder.append("Recipient_Name=").append(????).append("&");
         urlStringBuilder.append("SMS_Number=").append(msisdn).append("&");
         urlStringBuilder.append("SMS_Subject=").append(URLEncoder.encode(smsSubject, StandardCharsets.UTF_8.toString())).append("&");
         urlStringBuilder.append("SMS_Content=").append(URLEncoder.encode(smsContent, StandardCharsets.UTF_8.toString())).append("&");
         urlStringBuilder.append("Sender_Info=").append(notificationSenderInfo).append("&");
-
+        //optional
+        //serviceCode
+        //urlStringBuilder.append("serviceCode=").append(????).append("&");
+        //sourceSendDate
+        //urlStringBuilder.append("sourceSendDate=").append(????).append("&");
+        
         String urlRequest = urlStringBuilder.toString();
         logger.info("SMSGW request {" + urlRequest + "}");
         RestTemplate restTemplate = new RestTemplate();

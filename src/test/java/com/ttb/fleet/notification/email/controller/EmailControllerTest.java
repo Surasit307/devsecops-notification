@@ -43,7 +43,7 @@ class EmailControllerTest {
         emailout.setStatus("Success");
         emailout.setRequestedTimeStamp(simpledateformat.format(timestamp));
         try {
-            lenient().when(emailservice.send(Mockito.anyString(), new String[]{Mockito.anyString()}, Mockito.anyInt(), Mockito.anyMap(), Mockito.anyMap(), Mockito.anyString())).thenReturn(emailout);
+            lenient().when(emailservice.send(Mockito.anyString(), new String[]{Mockito.anyString()}, Mockito.anyString(), Mockito.anyMap(), Mockito.anyMap(), Mockito.anyString())).thenReturn(emailout);
         } catch (MessagingException | IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -65,7 +65,7 @@ class EmailControllerTest {
         header.put("x-system", "FE-fleet-customer");
 
         EmailIn emailin = new EmailIn();
-        emailin.setMessageId(1);
+        emailin.setMessageId("1");
         emailin.setLanguage("en");
         emailin.setTo(new String[]{"sender@example.com", "test@example.com"});
 
@@ -88,7 +88,7 @@ class EmailControllerTest {
         header.put("x-system", "FE-fleet-customer");
 
         EmailIn emailin = new EmailIn();
-        emailin.setMessageId(1);
+        emailin.setMessageId("1");
         emailin.setLanguage("th");
 
         ResponseEntity<ResponseOut> response = emailcontroller.SendEmail(header, emailin);
@@ -131,7 +131,7 @@ class EmailControllerTest {
 
         EmailIn emailin = new EmailIn();
         emailin.setTo(new String[]{"sender@example.com", "test@example.com"});
-        emailin.setMessageId(1);
+        emailin.setMessageId("1");
 
         ResponseEntity<ResponseOut> response = emailcontroller.SendEmail(header, emailin);
         Assertions.assertThat(response.getBody().getApiStatus().getCode()).isEqualTo("E4003");

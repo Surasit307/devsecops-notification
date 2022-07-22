@@ -13,7 +13,7 @@ public class EmailIn  implements Serializable {
     @JsonProperty("to")
     private String[] to;
     @JsonProperty("message_id")
-    private int messageId;
+    private String messageId;
     @JsonProperty("language")
     private String language;
     @JsonProperty("replace_subject")
@@ -28,10 +28,10 @@ public class EmailIn  implements Serializable {
         this.to = to;
     }
 
-    public int getMessageId() {
+    public String getMessageId() {
         return messageId;
     }
-    public void setMessageId(int messageId) {
+    public void setMessageId(String messageId) {
         this.messageId = messageId;
     }
 

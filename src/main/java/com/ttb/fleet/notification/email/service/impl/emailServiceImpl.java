@@ -2,9 +2,11 @@ package com.ttb.fleet.notification.email.service.impl;
 
 import com.ttb.fleet.notification.common.utils.Template;
 import com.ttb.fleet.notification.email.service.EmailService;
+import com.ttb.fleet.notification.entity.EmailMessage;
 import com.ttb.fleet.notification.entity.Message;
 import com.ttb.fleet.notification.entity.MessageLog;
 import com.ttb.fleet.notification.logging.service.LoggingService;
+import com.ttb.fleet.notification.repository.EmailMessageRepository;
 import com.ttb.fleet.notification.repository.MessageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,26 +31,24 @@ public class emailServiceImpl implements EmailService {
 
     @Autowired
     private JavaMailSender javaMailSender;
-
-    @Autowired
-    private MessageRepository messagerepo;
     
     @Autowired
-    private LoggingService loggingService;
+    private EmailMessageRepository emailMsgRepo;
+    
 
     private final Logger logger = LoggerFactory.getLogger(EmailService.class);
     private static final SimpleDateFormat simpledateformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
     private Template template = new Template();
 
     @Override
-    public EmailOut send(String requestedId,String[] to, int messageId, Map<String,String> replaceSubject, Map<String,String> replaceBody, String language) throws Exception {
+    public EmailOut send(String requestedId,String[] to, String messageId, Map<String,String> replaceSubject, Map<String,String> replaceBody, String language) throws Exception {
         return send(requestedId, to, messageId, replaceSubject, replaceBody, language, null);
     }
 
     @Override
-    public EmailOut send(String requestedId,String[] to, int messageId, Map<String,String> replaceSubject, Map<String,String> replaceBody, String language, Object attachment) throws Exception {
+    public EmailOut send(String requestedId,String[] to, String messageId, Map<String,String> replaceSubject, Map<String,String> replaceBody, String language, Object attachment) throws Exception {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Message message = messagerepo.findByMessageIdAndLanguage(messageId,language);
+        EmailMessage message = emailMsgRepo.findByMessageIdAndLanguage(messageId,language);
         EmailOut emailOut = new EmailOut();
         emailOut.setRequestedTimeStamp(simpledateformat.format(timestamp));
 

@@ -52,7 +52,7 @@ public class EmailController {
                 response.setApiStatus(apistatus);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
-            if (body.getMessageId() == 0) {
+            if (body.getMessageId() == null) {
                 apistatus.setCode("E4002");
                 apistatus.setBusinessMessage("Require field missing");
                 apistatus.setDeveloperMessage("parameter message_id is missing");

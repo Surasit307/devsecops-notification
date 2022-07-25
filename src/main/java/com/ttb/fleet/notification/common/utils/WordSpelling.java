@@ -3,7 +3,7 @@ package com.ttb.fleet.notification.common.utils;
 public class WordSpelling {
 
 	
-	public static String engToThai(String input,String type) {
+	public static String engToSpellThai(String input,String type) {
 		 StringBuilder str = new StringBuilder();
 		  String[] inputStr = input.split("");	  
 		  
@@ -198,5 +198,202 @@ public class WordSpelling {
 
 		  return str.toString().substring(1);
 		
+	}
+	
+	
+	public static String engToSpellEng(String input,String type) {
+		 StringBuilder str = new StringBuilder();
+		  String[] inputStr = input.split("");	  
+		  
+		  for (String i : inputStr) {
+		   str.append("-");
+		   if (i.equals("!"))
+		    str.append("Exclamation Mark");  
+		   if (i.equals("1"))
+			str.append("one");
+		   if (i.equals("@"))
+			str.append("at sign");
+		   if (i.equals("2"))
+			str.append("two");
+		   if (i.equals("#"))
+		    str.append("shape");
+		   if (i.equals("3"))
+			str.append("three");
+		   if (i.equals("$"))
+		    str.append("dollar sign");
+		   if (i.equals("4"))
+			str.append("four");
+		   if (i.equals("%"))
+			str.append("percent sign");
+		   if (i.equals("5"))
+			str.append("five");
+		   if (i.equals("^"))
+			str.append("circumflex Accent"); 
+		   if (i.equals("6"))
+			str.append("six");
+		   if (i.equals("&"))
+			str.append("ampersand"); 
+		   if (i.equals("7"))
+			str.append("seven");
+		   if (i.equals("*"))
+			str.append("star");
+		   if (i.equals("8"))
+			str.append("eight");
+		   if (i.equals("("))
+			str.append("left parenthesis"); 
+		   if (i.equals("9"))
+			str.append("nine");
+		   if (i.equals(")"))
+			str.append("right parenthesis"); 
+		   if (i.equals("0"))
+			str.append("zero");
+		   if (i.equals("_"))
+			str.append("under score");
+		   if (i.equals("-"))
+			str.append("minus sign");
+		   if (i.equals("+"))
+			str.append("plus sign");  
+		   if (i.equals("="))
+			str.append("equal sign"); 
+		   if (i.equals("Q"))
+			str.append("Q(uppercase)");
+		   if (i.equals("q"))
+			str.append("q(lowercase)");
+		   if (i.equals("W"))
+			str.append("W(uppercase)");
+		   if (i.equals("w"))
+			str.append("w(lowercase)");
+		   if (i.equals("E"))
+			str.append("E(uppercase)");
+		   if (i.equals("e"))
+			str.append("e(lowercase)");
+		   if (i.equals("R"))
+			str.append("R(uppercase)");
+		   if (i.equals("r"))
+			str.append("r(lowercase)");
+		   if (i.equals("T"))
+			str.append("T(uppercase)");
+		   if (i.equals("t"))
+			str.append("t(lowercase)");
+		   if (i.equals("Y"))
+			str.append("Y(uppercase)");
+		   if (i.equals("y"))
+			str.append("y(lowercase)");
+		   if (i.equals("U"))
+			str.append("U(uppercase)");
+		   if (i.equals("u"))
+			str.append("u(lowercase)");
+		   if (i.equals("I"))
+			str.append("I(uppercase)");
+		   if (i.equals("i"))
+			str.append("i(lowercase)");
+		   if (i.equals("O"))
+			str.append("O(uppercase)");
+		   if (i.equals("o"))
+			str.append("o(lowercase)");
+		   if (i.equals("P"))
+			str.append("P(uppercase)");
+		   if (i.equals("p"))
+			str.append("p(lowercase)");
+		   if (i.equals("{"))
+			str.append("left curly bracket");
+		   if (i.equals("["))
+			str.append("left square bracket");
+		   if (i.equals("}"))
+			str.append("right curly bracket");
+		   if (i.equals("]"))
+			str.append("right square bracket");
+		   if (i.equals("|"))
+			str.append("vertical line");
+		   if (i.equals("A"))
+			str.append("A(uppercase)");
+		   if (i.equals("a"))
+			str.append("a(lowercase)");
+		   if (i.equals("S"))
+			str.append("S(uppercase)");
+		   if (i.equals("s"))
+			str.append("s(lowercase)");
+		   if (i.equals("D"))
+			str.append("D(uppercase)");
+		   if (i.equals("d"))
+			str.append("d(lowercase)");
+		   if (i.equals("F"))
+			str.append("F(uppercase)");
+		   if (i.equals("f"))
+			str.append("f(lowercase)");
+		   if (i.equals("G"))
+			str.append("G(uppercase)");
+		   if (i.equals("g"))
+			str.append("g(lowercase)");
+		   if (i.equals("H"))
+			str.append("H(uppercase)");
+		   if (i.equals("h"))
+			str.append("h(lowercase)");
+		   if (i.equals("J"))
+			str.append("J(uppercase)");
+		   if (i.equals("j"))
+			str.append("j(lowercase)");
+		   if (i.equals("K"))
+			str.append("K(uppercase)");
+		   if (i.equals("k"))
+			str.append("k(lowercase)");
+		   if (i.equals("L"))
+			str.append("L(uppercase)");
+		   if (i.equals("l"))
+			str.append("l(lowercase)");
+		   if (i.equals(":"))
+			str.append("colon");
+		   if (i.equals(";"))
+			str.append("semicolon");
+		   if (i.equals("\""))
+			str.append("back slash"); 
+		   if (i.equals("'"))
+			str.append("apostrophe");
+		   if (i.equals("Z"))
+			str.append("Z(uppercase)");
+		   if (i.equals("z"))
+			str.append("z(lowercase)");
+		   if (i.equals("X"))
+			str.append("X(uppercase)");
+		   if (i.equals("x"))
+			str.append("x(lowercase)");
+		   if (i.equals("C"))
+			str.append("C(uppercase)");
+		   if (i.equals("c"))
+			str.append("c(lowercase)");
+		   if (i.equals("V"))
+			str.append("V(uppercase)");
+		   if (i.equals("v"))
+			str.append("v(lowercase)");
+		   if (i.equals("B"))
+			str.append("B(uppercase)");
+		   if (i.equals("b"))
+			str.append("b(lowercase)");
+		   if (i.equals("N"))
+			str.append("N(uppercase)");
+		   if (i.equals("n"))
+			str.append("n(lowercase)");
+		   if (i.equals("M"))
+			str.append("M(uppercase)");
+		   if (i.equals("m"))
+			str.append("m(lowercase)");
+		   if (i.equals("<"))
+			str.append("less than sign"); 
+		   if (i.equals(","))
+			str.append("comma");
+		   if (i.equals(">"))
+			str.append("more than sign"); 
+		   if (i.equals("."))
+			str.append("full stop");
+		   if (i.equals("?"))
+			str.append("question mark");
+		   if (i.equals("/"))
+			str.append("slash");
+		   if (i.equals("\\")) 
+		 	str.append("back slash"); 
+
+		  }
+
+		  return str.toString().substring(1);
 	}
 }

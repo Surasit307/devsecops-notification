@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface EmailService {
 
-    public EmailOut send(String requestId, String[] to, String messageId,  Map<String,String> replaceSubject, Map<String,String> replaceBody, String language) throws Exception;
+	public EmailOut send(String requestedId, String[] to, String messageIdTh,String messageIdEn, Map<String, String> replaceSubject,Map<String, String> replaceBody) throws Exception;
+	public EmailOut send(String requestedId, String[] to, String messageIdTh,String messageIdEn, Map<String, String> replaceSubject,Map<String, String> replaceBody, Object attachment) throws Exception;
 
-    public EmailOut send(String requestId, String[] to, String messageId,  Map<String,String> replaceSubject, Map<String,String> replaceBody, String language, Object attachment) throws Exception;
 }

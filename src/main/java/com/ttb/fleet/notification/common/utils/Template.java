@@ -50,7 +50,7 @@ public class Template {
 			result = messageTH.getSubject().concat("/").concat(messageEN.getSubject());
 			
 		}else {
-			result = messageTH.getHtmlContent().concat("<br>").concat(messageEN.getHtmlContent());	
+			result = messageTH.getHtmlContent().concat("</br>").concat(messageEN.getHtmlContent());	
 		}
 		
 		return result;

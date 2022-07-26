@@ -52,7 +52,7 @@ public class EmailController {
                 response.setApiStatus(apistatus);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
-            if (body.getMessageId() == null) {
+            if (body.getMessageIdTh() == null && body.getMessageIdEn() == null) {
                 apistatus.setCode("E4002");
                 apistatus.setBusinessMessage("Require field missing");
                 apistatus.setDeveloperMessage("parameter message_id is missing");
@@ -67,7 +67,7 @@ public class EmailController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
 
-            EmailOut emailOut = emailservice.send(headers.get("x-requested-id"), body.getTo(), body.getMessageId(), body.getReplaceSubject(), body.getReplaceBody(), body.getLanguage());
+            EmailOut emailOut = emailservice.send(headers.get("x-requested-id"), body.getTo(), body.getMessageIdTh(),body.getMessageIdEn(), body.getReplaceSubject(), body.getReplaceBody(), body.getLanguage());
             if(emailOut.getStatus().equals("success")) {
                 apistatus.setCode("S0000");
                 apistatus.setBusinessMessage("Email Sending Successful");

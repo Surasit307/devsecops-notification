@@ -9,6 +9,8 @@ import org.apache.velocity.runtime.resource.util.StringResourceRepository;
 import java.io.StringWriter;
 import java.util.Map;
 
+import com.ttb.fleet.notification.entity.EmailMessage;
+
 public class Template {
 
     // Initialize the engine.
@@ -41,4 +43,17 @@ public class Template {
 
         return writer.toString();
     }
+    
+	public String combineMessageContent(EmailMessage messageTH , EmailMessage messageEN,String type) {
+		String result = "";
+		if(type.equals("subject")) {
+			result = messageTH.getSubject().concat("/").concat(messageEN.getSubject());
+			
+		}else {
+			result = messageTH.getHtmlContent().concat("<br>").concat(messageEN.getHtmlContent());	
+		}
+		
+		return result;
+	}
+	
 }

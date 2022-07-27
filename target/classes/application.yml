@@ -33,32 +33,44 @@ spring:
     password: ${DATABASE_PASSWORD:nttdata}
     initialization-mode: always
     platform: postgres
-  nacos:
-    discovery:
-      server-addr: ${NACOS_ENDPOINT:127.0.0.1:8848}
-      auto-register: true
-  cloud:
-    nacos:
-      discovery:
-        server-addr: ${NACOS_ENDPOINT:127.0.0.1:8848}
-        namespace: ${NACOS_NAMESPACE:9cd826a1-2bb5-4eeb-a2fb-20cb95ea65f2}
+#  nacos:
+#    discovery:
+#      server-addr: ${NACOS_ENDPOINT:127.0.0.1:8848}
+#      auto-register: true
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: ${NACOS_ENDPOINT:127.0.0.1:8848}
+#        namespace: ${NACOS_NAMESPACE:9cd826a1-2bb5-4eeb-a2fb-20cb95ea65f2}
 
   mail:
     host: ${SMTP_HOST:smtp.gmail.com}
     port: ${SMTP_PORT:587}
-    username: applogicthailand@gmail.com
-    password:
+    username: ${SMTP_USERNAME:devsecops009@gmail.com}
+    password: ${SMTP_PASSWORD:mzxqomairbpnrpmo}
     # Other properties
-    smtp:
-      auth: true
-      connectiontimeout: 5000
-      timeout: 5000
-      writetimeout: 5000
-      starttls:
-        enable: true
-      ssl:
-        trust: smtp.gmail.com
-        protocols: TLSv1.2
+    properties:
+      mail:
+        smtp:
+          auth: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+          starttls:
+            enable: true
+          ssl:
+            trust: smtp.gmail.com
+            protocols: TLSv1.2
+#    smtp:
+#      auth: true
+#      connectiontimeout: 5000
+#      timeout: 5000
+#      writetimeout: 5000
+#      starttls:
+#        enable: true
+#      ssl:
+#        trust: smtp.gmail.com
+#        protocols: TLSv1.2
       # SSL, post 465
 #      socketFactory:
 #        port: 465
@@ -109,4 +121,7 @@ eureka:
 thread-pool: 20
 notification:
   sms:
-    url: http://172.20.5.X/smsgw/smshttphandler_enc.ashx
+    url: http://172.28.12.36:8082/SmsAdapter/sms_otp
+    channelId: NFC
+    productCode: OTHNFC
+    senderInfo: 8139
